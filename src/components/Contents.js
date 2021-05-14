@@ -5,18 +5,9 @@ import axios from 'axios';
 
 const Contents = () => {
 
-    const [confirmedData, setConfirmedData] = useState({
-        labels: ["1월", "2월", "3월"],
-        datasets: [
-            {
-                label: "국내 누적 확진자",
-                backgroundColor: "salmon",
-                fill: true,
-                data: [10, 5, 3]
-            },
-        ]
-    })
-
+    const [confirmedData, setConfirmedData] = useState({})
+    const [quarantinedData, setQuarantinedData] = useState({})
+    const [comparedData, setComparedData] = useState({})
 
     // async랑 await를 쓰지 않으면 다 불러와지기 전에 변수에 담겨서 consol에 찍힘. 그래서 이 두 개를 써주는 것.
     useEffect(() => {
@@ -65,10 +56,53 @@ const Contents = () => {
                 return acc;
             }, [])
 
+            const labels = arr.map(a => `${a.month + 1}월`);
+            // state를 업데이트. OBJ 형태로 업데이트를 시킴
+            setConfirmedData({
+                // 이것도 key와 value가 같으니까 생략 가능.
+                labels: labels,
+                datasets: [
+                    {
+                        label: "국내 누적 확진자",
+                        backgroundColor: "salmon",
+                        fill: true,
+                        data: arr.map(a => a.confirmed) // 이것도 arrow function처럼 {}랑 return 생략한 거!
+                    },
+                ]
+            });
+
+            setQuarantinedData({
+                // 이것도 key와 value가 같으니까 생략 가능. 이건 생략한 버전
+                labels,
+                datasets: [
+                    {
+                        label: "월별 격리자 현황",
+                        borderColor: "salmon",
+                        fill: false,
+                        data: arr.map(a => a.active) // 이것도 arrow function처럼 {}랑 return 생략한 거!
+                    },
+                ]
+            });
+
+            const last = arr[arr.length - 1]
+            setComparedData({
+                // 이것도 key와 value가 같으니까 생략 가능. 이건 생략한 버전
+                labels: ["확진자", "격리 해제", "사망"],
+                datasets: [
+                    {
+                        label: "누적 확진, 해제, 사망 비율",
+                        backgroundColor: ["#ff3d67", "#059bff", "#ffc233"],
+                        borderColor: ["#ff3d67", "#059bff", "#ffc233"],
+                        fill: false,
+                        data: [last.confirmed, last.recovered, last.death]
+                    },
+                ]
+            });
+
         }
 
-        fetchEvents()
-    })
+        fetchEvents();
+    }, []) // 두 번째에 배열을 선언해야 계속적으로 요청하는 걸 방지함.
 
     return (
         <div>
@@ -78,6 +112,16 @@ const Contents = () => {
                     <div>
                         <Bar data={confirmedData} options={
                             { title: { display: true, text: "누적 확진자 추이", fontSize: 16 } },
+                            { legend: { display: true, positon: "bottom" } }
+                        } />
+
+                        <Line data={quarantinedData} options={
+                            { title: { display: true, text: "월별 격리자 현황", fontSize: 16 } },
+                            { legend: { display: true, positon: "bottom" } }
+                        } />
+
+                        <Doughnut data={comparedData} options={
+                            { title: { display: true, text: `누적 확진, 해제, 사망 (${new Date().getMonth() + 1}월)`, fontSize: 16 } },
                             { legend: { display: true, positon: "bottom" } }
                         } />
 
