@@ -5,8 +5,8 @@
 - 'https://documenter.getpostman.com/view/10808728/SzS8rjbc' 사이트 API 사용
 - Bar, Doughnut, Line사용
 
-## yarn으로 build 하기
-- 배포 주소: 
+## yarn과 깃허브페이지로 build 및 deploy 하기
+- 배포 주소:  https://fehyoeun.github.io/coronaChart/
 
 #### 습득한 기술
 - Array의 method 활용
