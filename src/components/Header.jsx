@@ -7,8 +7,8 @@ const Header = () => {
                 COVID-19
            </h1>
             <select>
-                <option>국내</option>
-                <option>세계</option>
+                <option>국내(KOR)</option>
+                <option>국외(USA)</option>
             </select>
         </header>
     );

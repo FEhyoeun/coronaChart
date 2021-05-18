@@ -9,6 +9,7 @@ const Contents = () => {
     const [quarantinedData, setQuarantinedData] = useState({})
     const [comparedData, setComparedData] = useState({})
 
+
     // async랑 await를 쓰지 않으면 다 불러와지기 전에 변수에 담겨서 consol에 찍힘. 그래서 이 두 개를 써주는 것.
     useEffect(() => {
         const fetchEvents = async () => {
@@ -57,13 +58,19 @@ const Contents = () => {
             }, [])
 
             const labels = arr.map(a => `${a.month + 1}월`);
+
+            // label에 들어갈 문자 변수로 만듦.
+            const confirmedText = '국내 누적 확진자';
+            const quarantinedText = '월별 격리자 현황';
+            const comparedText = '확진자, 격리 해제, 사망';
+
             // state를 업데이트. OBJ 형태로 업데이트를 시킴
             setConfirmedData({
                 // 이것도 key와 value가 같으니까 생략 가능.
                 labels: labels,
                 datasets: [
                     {
-                        label: "국내 누적 확진자",
+                        label: confirmedText,
                         backgroundColor: "salmon",
                         fill: true,
                         data: arr.map(a => a.confirmed) // 이것도 arrow function처럼 {}랑 return 생략한 거!
@@ -76,7 +83,7 @@ const Contents = () => {
                 labels,
                 datasets: [
                     {
-                        label: "월별 격리자 현황",
+                        label: quarantinedText,
                         borderColor: "salmon",
                         fill: false,
                         data: arr.map(a => a.active) // 이것도 arrow function처럼 {}랑 return 생략한 거!
@@ -90,7 +97,7 @@ const Contents = () => {
                 labels: ["확진자", "격리 해제", "사망"],
                 datasets: [
                     {
-                        label: "누적 확진, 해제, 사망 비율",
+                        label: comparedText,
                         backgroundColor: ["#ff3d67", "#059bff", "#ffc233"],
                         borderColor: ["#ff3d67", "#059bff", "#ffc233"],
                         fill: false,
@@ -107,25 +114,22 @@ const Contents = () => {
     return (
         <div>
             <section>
-                <h2>국내 코로나 현황</h2>
+                <h2 className="main_title">국내 코로나 현황</h2>
                 <div className="contents">
-                    <div>
-                        <Bar data={confirmedData} options={
-                            { title: { display: true, text: "누적 확진자 추이", fontSize: 16 } },
-                            { legend: { display: true, positon: "bottom" } }
-                        } />
+                    <Bar data={confirmedData} options={
+                        { title: { display: true, text: "누적 확진자 추이", fontSize: 16 } },
+                        { legend: { display: true, positon: "bottom" } }
+                    } />
 
-                        <Line data={quarantinedData} options={
-                            { title: { display: true, text: "월별 격리자 현황", fontSize: 16 } },
-                            { legend: { display: true, positon: "bottom" } }
-                        } />
+                    <Line data={quarantinedData} options={
+                        { title: { display: true, text: "월별 격리자 현황", fontSize: 16 } },
+                        { legend: { display: true, positon: "bottom" } }
+                    } />
 
-                        <Doughnut data={comparedData} options={
-                            { title: { display: true, text: `누적 확진, 해제, 사망 (${new Date().getMonth() + 1}월)`, fontSize: 16 } },
-                            { legend: { display: true, positon: "bottom" } }
-                        } />
-
-                    </div>
+                    <Doughnut data={comparedData} options={
+                        { title: { display: true, text: `누적 확진, 해제, 사망 (${new Date().getMonth() + 1}월)`, fontSize: 16 } },
+                        { legend: { display: true, positon: "bottom" } }
+                    } />
                 </div>
             </section>
         </div >
